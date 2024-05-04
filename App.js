@@ -1,12 +1,14 @@
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import AuthNavigation from './src/components/navigations/AuthNavigation';
 
 export default function App() {
   return (
-    <View className="bg-red-500 h-screen">
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <AuthNavigation />
+    </NavigationContainer>
   );
 }
 
