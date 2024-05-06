@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, TouchableOpacity, Alert, Image } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Uploading from '../components/Uploading'
 import { Ionicons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
@@ -14,6 +14,8 @@ export const API_SAVE_IMAGE_URL = `${API_BASE_URL}/multimedia`;
 const AddScreen = () => {
 	const [image, setImage] = useState(null);
 	const [isLoading, setIsLoading] = useState(false)
+	const [progress, setProgress] = useState(0)
+	const [multimedia, setMultimedia] = useState([])
 
 	const PickImage = async () => {
 		try {
@@ -103,15 +105,73 @@ const AddScreen = () => {
 			Alert.alert('Error', 'Failed to save image URL');
 		}
 	};
+	useEffect(() => {
+		const fetchImageData = async () => {
+			setIsLoading(true);
+			try {
+				const response = await fetch(API_SAVE_IMAGE_URL);
 
+				if (!response.ok) {
+					throw new Error('Failed to fetch data');
+				}
+
+				const data = await response.json();
+				setMultimedia(data);
+				setIsLoading(false);
+			} catch (error) {
+				console.error('Error fetching data:', error.message);
+				setIsLoading(false);
+				// Handle error
+			}
+		};
+
+		fetchImageData(); // Call the function when component mounts
+	}, []);
+
+
+	console.log('data media', multimedia)
+	const data = multimedia.data;
 
 	return (
-		<SafeAreaView className="flex items-center justify-center bg-gray-900 h-screen ">
+		<SafeAreaView className="flex bg-gray-900 h-screen ">
+			{isLoading ? (
+				<View>
+					<Text className="text-white">Loading...</Text>
+				</View>
+			) : (
+				data ? (
+					<View>
+						{data?.map(data => {
+							const image = data.link
+							return (
+								<View key={data.id}>
+									<Image
+										source={{ uri: image }}
+										style={{
+											width: 100,
+											height: 100,
+											resizeMode: "contain",
+											borderRadius: 6,
+										}}
+									/>
+								</View>
+							)
+						})}
+					</View>
+				) : (
+					<View>
+						<Text>No data..</Text>
+					</View>
+				)
+			)}
+
+
 
 			{image &&
 				<View className="flex justify-center items-center">
 					<Uploading
 						image={image}
+						progress={progress}
 					/>
 				</View>
 			}
