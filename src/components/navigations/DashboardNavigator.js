@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import DashboardScreen from '../../screens/DashboardScreen'
 import VideoScreen from '../../screens/VideoScreen'
 import AddVideoScreen from '../../screens/AddVideoScreen'
-import { SafeAreaView, Text, View } from 'react-native'
+import { Image, SafeAreaView, ScrollView, Text, View } from 'react-native'
 
 
 const Stack = createStackNavigator()
@@ -12,8 +12,21 @@ const DashboardNavigator = () => {
 	const [greeting, setGreeting] = React.useState('');
 	// const navigation = useNavigation()
 
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-	React.useEffect(() => {
+	useEffect(() => {
+		checkLoginStatus();
+	}, []);
+
+	const checkLoginStatus = async () => {
+		const accessToken = await AsyncStorage.getItem('accessToken');
+		setIsLoggedIn(!!accessToken);
+	};
+
+	console.log('Login: Yes/No', isLoggedIn)
+
+
+	useEffect(() => {
 
 		// fetchUserDetails()
 		const currentHour = new Date().getHours();
@@ -38,6 +51,68 @@ const DashboardNavigator = () => {
 					<Text className="font-bold">Nath</Text>
 				</View>
 			</View>
+			<ScrollView className="gap-0 space-x-1">
+				<View className="flex flex-row flex-1">
+					<Image
+						className=""
+						source={require('../../../assets/mercy.png')}
+						style={{ width: 200, height: 200 }}
+					/>
+					<Image
+						className=""
+						source={require('../../../assets/mercy.png')}
+						style={{ width: 200, height: 200 }}
+					/>
+				</View>
+				<View className="flex flex-row flex-1">
+					<Image
+						className=""
+						source={require('../../../assets/mercy.png')}
+						style={{ width: 200, height: 200 }}
+					/>
+					<Image
+						className=""
+						source={require('../../../assets/mercy.png')}
+						style={{ width: 200, height: 200 }}
+					/>
+				</View>
+				<View className="flex flex-row flex-1">
+					<Image
+						className=""
+						source={require('../../../assets/mercy.png')}
+						style={{ width: 200, height: 200 }}
+					/>
+					<Image
+						className=""
+						source={require('../../../assets/mercy.png')}
+						style={{ width: 200, height: 200 }}
+					/>
+				</View>
+				<View className="flex flex-row flex-1">
+					<Image
+						className=""
+						source={require('../../../assets/mercy.png')}
+						style={{ width: 200, height: 200 }}
+					/>
+					<Image
+						className=""
+						source={require('../../../assets/mercy.png')}
+						style={{ width: 200, height: 200 }}
+					/>
+				</View>
+				<View className="flex flex-row flex-1">
+					<Image
+						className=""
+						source={require('../../../assets/mercy.png')}
+						style={{ width: 200, height: 200 }}
+					/>
+					<Image
+						className=""
+						source={require('../../../assets/mercy.png')}
+						style={{ width: 200, height: 200 }}
+					/>
+				</View>
+			</ScrollView>
 
 		</SafeAreaView>
 	)
