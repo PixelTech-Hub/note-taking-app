@@ -1,12 +1,66 @@
-import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { View, Text, TouchableOpacity, TextInput, Image, SafeAreaView, Alert } from 'react-native'
+import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import { userLogin } from '../api/userApi'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Login = () => {
-	const navigation = useNavigation()
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
+	const [seePassword, setSeePassword] = useState(true)
+	const [checkValidEmail, setCheckValidEmail] = useState(false)
+
+	const navigation = useNavigation()
+
+
+	const handleCheckEmail = (text) => {
+		let re = /\S+0\S+\.\S+/;
+		let regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im
+		setEmail(text)
+		if (re.test(text) || regex.test(text)) {
+			setCheckValidEmail(false)
+		}
+		else {
+			setCheckValidEmail(true)
+		}
+	}
+
+	const checkPasswordValidity = (value) => {
+		const isNonWhiteSpace = /^\S*$/;
+		const isContainUppercase = /^(?=.*[A-Z]).*$/;
+		const isContainLowercase = /^(?=.*[a-z]).*$/;
+		const isValidLength = /^.{8,16}$/;
+		if (!isNonWhiteSpace.test(value)) {
+			return 'Password must not contain empty space'
+		}
+		if (!isContainUppercase.test(value)) {
+			return 'Password must have atleast one uppercase'
+		}
+		if (!isContainLowercase.test(value)) {
+			return 'Password must have atleast one lowercase'
+		}
+		if (!isValidLength.test(value)) {
+			return 'Password must have atleast 8 characters'
+		}
+		return null;
+	}
+
+	const handleLogin = () => {
+		userLogin({
+			email: email,
+			password: password
+		}).then(result => {
+			if (result.status === 201) {
+				const accessToken = result.data.accessToken; // Assuming accessToken is the key for the access token in the response
+				AsyncStorage.setItem("accessToken", accessToken.toString()); // Convert to string before setting
+				console.log('Login Success');
+				Alert.alert("Login Success!");
+				navigation.navigate("Home");
+			}
+		}).catch(error => {
+			console.error(error);
+		});
+	};
 
 	return (
 		<View className="flex-1 bg-white">
@@ -46,7 +100,7 @@ const Login = () => {
 
 					<TouchableOpacity
 						className="py-3 bg-fuchsia-900 rounded-xl"
-						onPress={navigation.navigate("Home")}
+						onPress={handleLogin}
 					>
 						<Text
 							className="text-xl font-bold text-center text-gray-300"

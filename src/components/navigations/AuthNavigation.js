@@ -17,24 +17,23 @@ const AuthNavigation = () => {
 	return (
 		<Stack.Navigator screenOptions={{ headerShown: false }}>
 
-			{!user === null ? <>
-				<Stack.Screen
-					name="Login"
-					component={Login}
-					options={{ headerShown: false }}
-				/>
-				<Stack.Screen
-					name="SignUp"
-					component={SignUp}
-					options={{ headerShown: false }}
-				/>
-			</> : (
-				<Stack.Screen
+
+			<Stack.Screen
+				name="Login"
+				component={Login}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="SignUp"
+				component={SignUp}
+				options={{ headerShown: false }}
+			/>
+			{/* <Stack.Screen
 					name="Home"
 					component={BottomTabNavigator}
 					options={{ headerShown: false }}
-				/>
-			)}
+				/> */}
+
 
 
 
