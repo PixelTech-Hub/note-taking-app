@@ -140,7 +140,7 @@ const AddScreen = () => {
 				</View>
 			) : (
 				data ? (
-					<View>
+					<View className="grid grid-cols-3">
 						{data?.map(data => {
 							const image = data.link
 							return (
@@ -148,8 +148,8 @@ const AddScreen = () => {
 									<Image
 										source={{ uri: image }}
 										style={{
-											width: 100,
-											height: 100,
+											width: 300,
+											height: 300,
 											resizeMode: "contain",
 											borderRadius: 6,
 										}}
