@@ -1,42 +1,87 @@
-import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, SafeAreaView, StyleSheet } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import DashboardNavigator from '../components/navigations/DashboardNavigator';
+import AddScreen from './AddScreen';
+import SettingScreen from '../components/navigations/SettingScreen';
+import CustomTabBarButton from '../components/button/CustomTabBarButton';
+import Icon from 'react-native-vector-icons/Ionicons'
+
+
+const Tab = createBottomTabNavigator()
 
 export default function DashboardScreen() {
-	const [greeting, setGreeting] = useState('');
 	const navigation = useNavigation()
 
-
-	useEffect(() => {
-		const currentHour = new Date().getHours();
-		let greetingText = 'Good Morning,';
-
-		if (currentHour >= 12 && currentHour < 18) {
-			greetingText = 'Good Afternoon,';
-		} else if (currentHour >= 18) {
-			greetingText = 'Good Evening,';
-		}
-
-		setGreeting(greetingText);
-	}, []);
 	return (
-			<SafeAreaView className="relative  bg-gray-900 h-screen ">
-				<View className=" px-4 flex flex-row items-center justify-between">
-					<View>
-						<Text className="text-white font-bold text-lg">{greeting}</Text>
-						<Text className="text-white font-bold text-lg">Nathan</Text>
-						<Text></Text>
-					</View>
-					<View className="bg-white w-12 h-12 items-center justify-center text-center rounded-full p-1">
-						<Text className="font-bold">Nath</Text>
-					</View>
-				</View>
-				{/* Search Icon */}
+		<Tab.Navigator
+			screenOptions={({ route }) => ({
+				headerShown: false,
+				tabBarStyle: styles.tabBarStyle,
+				tabBarActiveTintColor: '#fff',
+				tabBarInactiveTintColor: '#000',
+				tabBarIcon: ({ color, size, focused }) => {
+					let iconName = ''
+					if (route.name === 'App') {
+						iconName = focused ? 'home' : 'home'
+					}
+					else if (route.name === 'Add') {
+						iconName = focused ? 'add-outline' : 'add-outline'
+					}
+					else if (route.name === 'Settings') {
+						iconName = focused ? 'person-outline' : 'person-outline'
+					}
+					return (
+						<Icon name={iconName} color={color} size={25} />
+					)
+				}
+			})}
+		>
+			<Tab.Screen
+				name='App'
+				component={DashboardNavigator}
+				options={{
+					// tabBarLabel: '',
+					// tabBarShowLabel: true
 
-				{/* Main Content */}
-				{/* <NoteCard /> */}
-				
+					tabBarButton: props => <CustomTabBarButton {...props} />
+				}}
 
-			</SafeAreaView>
+			/>
+			<Tab.Screen
+				name='Add'
+				component={AddScreen}
+
+				options={{
+					tabBarButton: props => <CustomTabBarButton {...props} iconName="add" />
+				}}
+			/>
+			<Tab.Screen
+				name='Settings'
+				component={SettingScreen}
+				options={{
+					// tabBarLabel: 'Person',
+					// tabBarShowLabel: true,
+					tabBarButton: props => <CustomTabBarButton {...props} />
+				}}
+			/>
+		</Tab.Navigator>
 	)
 }
+
+const styles = StyleSheet.create({
+	tabBarStyle: {
+		// position: 'absolute',
+		backgroundColor: '#1ecbe1',
+		// borderTopWidth: 2,
+		// bottom: 50,
+
+		// padding: -20,
+		// paddingTop: 13,
+		// borderRadius: 10,
+		alignItems: 'center',
+		justifyContent: 'center'
+	}
+})
