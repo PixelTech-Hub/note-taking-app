@@ -1,23 +1,17 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-import { useNavigation } from '@react-navigation/native'
-import { FlatList } from 'react-native-gesture-handler';
-import { Video } from 'expo-av';
+import { FlatList } from 'react-native-gesture-handler'
+import { ResizeMode, Video } from 'expo-av'
+import { videos } from '../data/data'
+import { Button } from 'react-native'
 
-const VideoScreen = () => {
-	const navigation = useNavigation();
+const VideoRoute = () => {
+	const video = React.useRef(null);
+	const [status, setStatus] = React.useState({});
 	return (
-		<View className="flex flex-1  items-center justify-center">
-
-			<View className="flex-row items-center justify-end mx-4 mt-4">
-				<TouchableOpacity className="bg-fuchsia-900 p-1 px-4 rounded-md  flex  justify-center items-center" >
-					<Text className="text-xl text-white font-semibold -pb-24">Post</Text>
-				</TouchableOpacity>
-
-			</View>
-
+		<View className=" flex-1">
 			<FlatList
-				ItemSeparatorComponent={() => <View className="pt-2" />}
+				ItemSeparatorComponent={() => <View className="pt-4" />}
 				data={videos ? videos : []}
 				keyExtractor={(item, index) => `${index}`}
 				renderItem={(item, index) => {
@@ -56,4 +50,24 @@ const VideoScreen = () => {
 	)
 }
 
-export default VideoScreen
+export default VideoRoute
+
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		backgroundColor: '#ecf0f1',
+	},
+	video: {
+		alignSelf: 'center',
+		width: 320,
+		height: 200,
+	},
+	buttons: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		color: '#000'
+	},
+});

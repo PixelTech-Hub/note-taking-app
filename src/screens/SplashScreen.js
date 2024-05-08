@@ -9,7 +9,8 @@ const SplashScreen = () => {
 
 	useEffect(() => {
 		setTimeout(() => {
-			handleGetToken()
+			// handleGetToken()
+			navigation.navigate("Home")
 		}, 2000)
 	})
 	const handleGetToken = async () => {
@@ -29,18 +30,7 @@ const SplashScreen = () => {
 					<Image source={require("../../assets/images/welcome.png")}
 						style={{ width: 350, height: 350 }} />
 				</View>
-				<View className="absolute bottom-4 left-10 right-10">
-					<TouchableOpacity
-						onPress={() => navigation.navigate('Login')}
-						className="py-3 bg-fuchsia-900 mx-7 rounded-xl">
-						<Text
-							className="text-xl font-bold text-center text-gray-300 uppercase"
-						>
-							Get Started
-						</Text>
-					</TouchableOpacity>
 
-				</View>
 			</View>
 		</SafeAreaView>
 	)

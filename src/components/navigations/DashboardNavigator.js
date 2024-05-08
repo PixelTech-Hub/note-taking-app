@@ -1,12 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import DashboardScreen from '../../screens/DashboardScreen'
-import VideoScreen from '../../screens/VideoScreen'
-import AddVideoScreen from '../../screens/AddVideoScreen'
-import { Image, SafeAreaView, ScrollView, Text, View } from 'react-native'
+import { Image, SafeAreaView, ScrollView, Text, View, useWindowDimensions } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import MediaTab from '../tab/MediaTab'
 
 
 const Stack = createStackNavigator()
+
+
+const FirstRoute = () => (
+	<View style={{ flex: 1, backgroundColor: '#ff4081' }} />
+);
+
+const SecondRoute = () => (
+	<View style={{ flex: 1, backgroundColor: '#673ab7' }} />
+);
+
+const renderScene = SceneMap({
+	first: FirstRoute,
+	second: SecondRoute,
+});
 
 const DashboardNavigator = () => {
 	const [greeting, setGreeting] = React.useState('');
@@ -39,6 +52,46 @@ const DashboardNavigator = () => {
 		}
 		setGreeting(greetingText);
 	}, []);
+
+	const getUserID = async () => {
+		try {
+			const userData = await AsyncStorage.getItem('userData');
+			return userData ? JSON.parse(userData).id : null;
+			console.log('.....userdata', userData)
+		} catch (error) {
+			console.error('Error retrieving user ID:', error);
+			return null;
+		}
+	};
+
+	// Function to fetch user data using the user ID
+	const fetchUserData = async () => {
+		try {
+			const userId = await getUserID();
+			if (userId) {
+				// Make a request to your backend API to fetch user data
+				const response = await fetch(`http://localhost:3000/users/${userId}`, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						// Optionally, include authentication token if needed
+						// 'Authorization': `Bearer ${accessToken}`
+					}
+				});
+				const userData = await response.json();
+				console.log('User data:', userData);
+			} else {
+				console.error('User ID not found.');
+			}
+		} catch (error) {
+			console.error('Error fetching user data:', error);
+		}
+	};
+
+
+
+	// Call fetchUserData wherever you need to retrieve user data
+	fetchUserData();
 	return (
 		<SafeAreaView className="relative  bg-gray-900 h-screen ">
 			<View className=" px-4 flex flex-row items-center justify-between">
@@ -51,68 +104,7 @@ const DashboardNavigator = () => {
 					<Text className="font-bold">Nath</Text>
 				</View>
 			</View>
-			<ScrollView className="gap-0 space-x-1">
-				<View className="flex flex-row flex-1">
-					<Image
-						className=""
-						source={require('../../../assets/mercy.png')}
-						style={{ width: 200, height: 200 }}
-					/>
-					<Image
-						className=""
-						source={require('../../../assets/mercy.png')}
-						style={{ width: 200, height: 200 }}
-					/>
-				</View>
-				<View className="flex flex-row flex-1">
-					<Image
-						className=""
-						source={require('../../../assets/mercy.png')}
-						style={{ width: 200, height: 200 }}
-					/>
-					<Image
-						className=""
-						source={require('../../../assets/mercy.png')}
-						style={{ width: 200, height: 200 }}
-					/>
-				</View>
-				<View className="flex flex-row flex-1">
-					<Image
-						className=""
-						source={require('../../../assets/mercy.png')}
-						style={{ width: 200, height: 200 }}
-					/>
-					<Image
-						className=""
-						source={require('../../../assets/mercy.png')}
-						style={{ width: 200, height: 200 }}
-					/>
-				</View>
-				<View className="flex flex-row flex-1">
-					<Image
-						className=""
-						source={require('../../../assets/mercy.png')}
-						style={{ width: 200, height: 200 }}
-					/>
-					<Image
-						className=""
-						source={require('../../../assets/mercy.png')}
-						style={{ width: 200, height: 200 }}
-					/>
-				</View>
-				<View className="flex flex-row flex-1">
-					<Image
-						className=""
-						source={require('../../../assets/mercy.png')}
-						style={{ width: 200, height: 200 }}
-					/>
-					<Image
-						className=""
-						source={require('../../../assets/mercy.png')}
-						style={{ width: 200, height: 200 }}
-					/>
-				</View>
-			</ScrollView>
+			<MediaTab />
 
 		</SafeAreaView>
 	)
