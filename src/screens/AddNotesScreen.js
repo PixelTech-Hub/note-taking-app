@@ -57,7 +57,7 @@ const AddNotesScreen = ({ route, navigation }) => {
 		});
 	}, [navigation, note]);
 	return (
-		<SafeAreaView style={Style.conteiner}>
+		<SafeAreaView  className="bg-slate-300 flex-1 h-screen p-4">
 			<TextInput
 				style={Style.txtTitleNote}
 				autoFocus={true}
@@ -81,27 +81,18 @@ const AddNotesScreen = ({ route, navigation }) => {
 				note={note}
 				setNote={setNote}
 			/>
-			<View
-				style={{
-					width: "100%",
-					flexDirection: "row",
-					justifyContent: "center",
-					marginTop: 10,
-					position: "absolute",
-					bottom: 0,
-				}}
-			>
+			<View className="absolute bottom-10 left-0 right-0 flex flex-row px-24 gap-10">
 				<TouchableOpacity
 					style={[
 						Style.actionButton,
 						{
-							backgroundColor: "#017CE9",
+							backgroundColor: "#e87717",
 							flex: 1,
 						},
 					]}
 					onPress={() => SaveNote(note, navigation)}
 				>
-					<Feather name="save" size={29} color="white" />
+					<Feather name="save" size={20} color="white" />
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={[
@@ -113,7 +104,7 @@ const AddNotesScreen = ({ route, navigation }) => {
 					]}
 					onPress={() => Delete(note, navigation)}
 				>
-					<Feather name="trash-2" size={24} color="white" />
+					<Feather name="trash-2" size={20} color="white" />
 				</TouchableOpacity>
 			</View>
 		</SafeAreaView>
@@ -137,7 +128,7 @@ const Style = StyleSheet.create({
 		borderWidth: 0.5,
 		borderRadius: 10,
 		width: "100%",
-		height: "15%",
+		height: "50%",
 	},
 	txtTitleNote: {
 		width: "100%",
@@ -150,10 +141,10 @@ const Style = StyleSheet.create({
 	},
 	actionButton: {
 		borderRadius: 10,
-		width: 70,
-		height: 70,
+		width: 20,
+		height: 50,
 		alignItems: "center",
 		justifyContent: "center",
-		margin: 10,
+		// margin: 10
 	},
 });

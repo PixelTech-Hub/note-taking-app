@@ -60,7 +60,7 @@ const NotesScreen = () => {
 				<SearchBar data={data} onChange={setData} />
 				<FlatList
 					ListEmptyComponent={
-						<Text style={{ textAlign: "center" }}>No Data!</Text>
+						<Text className="text-center">No Data!</Text>
 					}
 					data={data}
 					keyExtractor={(item) => item.id.toString()}
@@ -72,8 +72,9 @@ const NotesScreen = () => {
 					// className="absolute -bottom-[550px] right-10"
 					style={Style.newNoteButton}
 					onPress={() => navigation.navigate("Add Notes", { search: false })}
+					
 				>
-					<AntDesign name="pluscircle" size={60} color={Colors.addButton} />
+					<AntDesign name="pluscircle" size={50} color={Colors.addButton} />
 				</TouchableOpacity>
 			</SafeAreaView>
 		)
@@ -117,7 +118,7 @@ const Style = StyleSheet.create({
 	newNoteButton: {
 		zIndex: 9,
 		position: "absolute",
-		bottom: 20,
+		bottom: 60,
 		right: 20,
 		backgroundColor: "#fff",
 		borderRadius: 100,

@@ -19,12 +19,14 @@ export default function SearchBar({ data, onChange }) {
 	};
 
 	return (
-		<View className="bg-[#d3d3d3] rounded-lg p-3 px-2" >
+		<View className="bg-[#e87717] rounded-lg p-3 px-2" >
 			<TextInput
 				placeholder="Search Tasks..."
 				maxLength={50}
 				onChangeText={(text) => search(text)}
-				className=""
+				placeholderTextColor="#fff"
+				className="text-lg"
+				
 			/>
 		</View>
 	);

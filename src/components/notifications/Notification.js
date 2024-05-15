@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Modal, Text, TouchableOpacity, View, Platform } from "react-native";
+import { Modal, Text, TouchableOpacity, View, Platform, StyleSheet } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as Notifications from "expo-notifications";
-import Style from "./style";
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
@@ -73,29 +72,33 @@ const ModalNotification = ({
 						{ marginTop: Platform.OS === "ios" ? "85%" : "71%" },
 					]}
 				>
-					<Text style={Style.modalText}>
-						SELECT A TIME TO GET NOTIFIED FOR THE TASK!
+					<Text style={Style.modalText} className="text-center text-lg font-semibold">
+						SELECT A TIME TO GET NOTIFIED FOR THE NOTE!
 					</Text>
 					<View>
-						<Text style={{ textAlign: "center" }}>DATE</Text>
-						<TouchableOpacity
-							style={Style.buttonHours}
-							onPress={() => setShowPicker({ ...showPicker, showDate: true })}
-						>
-							<Text style={Style.txtHours}>{currentFormattedData("date")}</Text>
-						</TouchableOpacity>
+						<View className="flex flex-row items-center gap-24">
+							<Text className="text-lg font-bold">DATE:</Text>
+							<TouchableOpacity
+								style={Style.buttonHours}
+								onPress={() => setShowPicker({ ...showPicker, showDate: true })}
+							>
+								<Text style={Style.txtHours}>{currentFormattedData("date")}</Text>
+							</TouchableOpacity>
+						</View>
 						{showPicker.showDate && (
 							<DateTimePicker mode="date" value={date} onChange={onChange} />
 						)}
-						<Text style={{ textAlign: "center" }}>TIME</Text>
-						<TouchableOpacity
-							style={Style.buttonHours}
-							onPress={() => setShowPicker({ ...showPicker, showHours: true })}
-						>
-							<Text style={Style.txtHours}>
-								{currentFormattedData("hours")}
-							</Text>
-						</TouchableOpacity>
+						<View className="flex flex-row items-center gap-24">
+							<Text className="text-lg font-bold">TIME</Text>
+							<TouchableOpacity
+								style={Style.buttonHours}
+								onPress={() => setShowPicker({ ...showPicker, showHours: true })}
+							>
+								<Text style={Style.txtHours}>
+									{currentFormattedData("hours")}
+								</Text>
+							</TouchableOpacity>
+						</View>
 						{showPicker.showHours && (
 							<DateTimePicker mode="time" value={date} onChange={onChange} />
 						)}
@@ -108,7 +111,7 @@ const ModalNotification = ({
 								setModalVisible(!modalVisible);
 							}}
 						>
-							<Text style={Style.txtStyle}>SET</Text>
+							<Text clas style={Style.txtStyle}>SET</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
 							style={[Style.button, Style.buttonCancel]}
@@ -124,3 +127,67 @@ const ModalNotification = ({
 };
 
 export default ModalNotification;
+
+
+const Style = StyleSheet.create({
+	modalView: {
+		marginRight: 20,
+		marginLeft: 20,
+		backgroundColor: "#fff",
+		borderRadius: 20,
+		padding: 35,
+		height: "50%",
+		alignItems: "center",
+		justifyContent: "space-between",
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
+	},
+	modalButtons: {
+		flexDirection: "row",
+		justifyContent: "space-around",
+		width: "100%",
+	},
+	button: {
+		alignItems: "center",
+		borderRadius: 20,
+		padding: 10,
+		width: 100,
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
+	},
+	buttonCancel: {
+		backgroundColor: "#c70000",
+	},
+	buttonSave: {
+		backgroundColor: "#e87717",
+	},
+	txtStyle: {
+		fontWeight: "bold",
+		color: "#fff",
+	},
+	buttonHours: {
+		alignSelf: "center",
+		alignItems: "center",
+		borderBottomColor: "#000",
+		borderBottomWidth: 1,
+		width: 150,
+		marginBottom: 10,
+	},
+	txtHours: {
+		fontWeight: "bold",
+		color: "#000",
+		fontSize: 20,
+	},
+});

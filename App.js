@@ -81,9 +81,9 @@ export default function App() {
           component={AddNotesScreen}
           // options={{ headerShown: false }}
           options={{
-            title: 'ADD TODO',
+            title: 'ADD NOTES',
             headerTintColor: 'white',
-            headerStyle: { backgroundColor: COLORS.header, elevation: 0 },
+            headerStyle: { backgroundColor: '#e87717', elevation: 0 },
             headerShown: true
           }}
         />
