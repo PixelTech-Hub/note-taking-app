@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, TextInput } from "react-native";
-import Style from "../style/style";
 
 export default function SearchBar({ data, onChange }) {
 	const [masterData, setMasterData] = useState(data);
@@ -20,16 +19,12 @@ export default function SearchBar({ data, onChange }) {
 	};
 
 	return (
-		<View
-			style={[
-				Style.searchArea,
-				{ padding: 20 },
-			]}
-		>
+		<View className="bg-[#d3d3d3] rounded-lg p-3 px-2" >
 			<TextInput
 				placeholder="Search Tasks..."
 				maxLength={50}
 				onChangeText={(text) => search(text)}
+				className=""
 			/>
 		</View>
 	);

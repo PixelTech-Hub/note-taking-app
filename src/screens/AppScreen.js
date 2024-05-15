@@ -1,17 +1,17 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
+// import { withNavigation } from 'react-navigation';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MediaTab from '../components/tab/MediaTab';
 
 
 
 
-const AppScreen = () => {
+const AppScreen = ({ navigation }) => {
 	const [greeting, setGreeting] = useState("");
 
-	const navigation = useNavigation()
+	// const navigation = useNavigation()
 
 	useEffect(() => {
 
@@ -36,17 +36,49 @@ const AppScreen = () => {
 					<Text className="font-bold text-lg text-white">Nathan</Text>
 					<Text></Text>
 				</View>
-				<View className="bg-orange-200 px-4   w-16 h-16 items-center justify-center text-center rounded-full p-1">
-					<Text className="font-bold text-white">Nath</Text>
-				</View>
+				<TouchableOpacity onPress={() => navigation.navigate("Settings")}>
+					<View className="bg-orange-200 px-4   w-16 h-16 items-center justify-center text-center rounded-full p-1">
+						<Text className="font-bold text-white">Nath</Text>
+					</View>
+				</TouchableOpacity>
+
 			</View>
 			{/* <View className="bg-orange-600 p-4 rounded-lg  ">
 				<Text className="text-xl text-white text-center font-bold">You are most welcome here</Text>
 			</View> */}
-			<MediaTab />
+			<ScrollView className="px-2 py-3 gap-4">
+				<View className="flex flex-row gap-1">
+					<TouchableOpacity onPress={() => navigation.navigate("Videos")} className="bg-orange-600 w-1/2 rounded-xl p-2 h-[150px]">
+						<View>
+							<Text>Video</Text>
+						</View>
+					</TouchableOpacity>
+
+					<TouchableOpacity onPress={() => navigation.navigate("Photos")} className="bg-orange-600 w-1/2 rounded-xl p-2 h-[150px]">
+						<View>
+							<Text>Photos</Text>
+						</View>
+					</TouchableOpacity>
+
+				</View>
+				<View className="flex flex-row gap-1">
+					<TouchableOpacity onPress={() => navigation.navigate("Audios")} className="bg-orange-600 w-1/2 rounded-xl p-2 h-[150px]">
+						<View>
+							<Text>Audios</Text>
+						</View>
+					</TouchableOpacity>
+
+					<TouchableOpacity onPress={() => navigation.navigate("Notes")} className="bg-orange-600 w-1/2 rounded-xl p-2 h-[150px]">
+						<View>
+							<Text>Notes</Text>
+						</View>
+					</TouchableOpacity>
+
+				</View>
+			</ScrollView>
 
 
-			
+
 
 		</SafeAreaView>
 	)

@@ -8,6 +8,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import NotesScreen from './src/screens/NotesScreen';
 import AddNotesScreen from './src/screens/AddNotesScreen';
 import COLORS from './src/components/colors/colors';
+import AudioScreen from './src/screens/AudioScreen';
+import PhotoRoute from './src/components/PhotoRoute';
+import VideoRoute from './src/components/VideoRoute';
+import AppScreen from './src/screens/AppScreen';
+import SettingScreen from './src/screens/SettingScreen';
 
 const Stack = createStackNavigator()
 
@@ -31,11 +36,41 @@ export default function App() {
           component={SignUp}
           options={{ headerShown: false }}
         />
-        {/* <Stack.Screen
+        <Stack.Screen
           name="Home"
-          component={DashboardScreen}
+          component={AppScreen}
           options={{ headerShown: false }}
-        /> */}
+        />
+        <Stack.Screen
+          name="Videos"
+          component={VideoRoute}
+          options={{
+            title: 'My Videos',
+            headerTintColor: 'white',
+            headerStyle: { backgroundColor: COLORS.header, elevation: 0 },
+            headerShown: true
+          }}
+        />
+        <Stack.Screen
+          name="Photos"
+          component={PhotoRoute}
+          options={{
+            title: 'My Photos',
+            headerTintColor: 'white',
+            headerStyle: { backgroundColor: COLORS.header, elevation: 0 },
+            headerShown: true
+          }}
+        />
+        <Stack.Screen
+          name="Audios"
+          component={AudioScreen}
+          options={{
+            title: 'AUDIO RECORDINGS',
+            headerTintColor: 'white',
+            headerStyle: { backgroundColor: COLORS.header, elevation: 0 },
+            headerShown: true
+          }}
+        />
         <Stack.Screen
           name="Notes"
           component={NotesScreen}
@@ -46,11 +81,22 @@ export default function App() {
           component={AddNotesScreen}
           // options={{ headerShown: false }}
           options={{
-            title:'ADD TODO', 
+            title: 'ADD TODO',
             headerTintColor: 'white',
-            headerStyle: { backgroundColor:COLORS.header, elevation: 0 },
+            headerStyle: { backgroundColor: COLORS.header, elevation: 0 },
             headerShown: true
-            }}
+          }}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={SettingScreen}
+          // options={{ headerShown: false }}
+          options={{
+            title: '',
+            headerTintColor: 'white',
+            headerStyle: { backgroundColor: COLORS.header, elevation: 0 },
+            headerShown: true
+          }}
         />
 
 

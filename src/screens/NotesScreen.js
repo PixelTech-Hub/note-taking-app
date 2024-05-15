@@ -53,9 +53,10 @@ const NotesScreen = () => {
 		);
 	} else {
 		return (
-			<SafeAreaView style={Style.conteiner}
+			<SafeAreaView
+				className="bg-[#00283A] flex-1 h-screen px-2"
 			>
-				<Text style={Style.txtTitle}>NOTE-TAKING-APP</Text>
+				<Text className="text-white font-bold py-6 text-2xl text-center">MY NOTES</Text>
 				<SearchBar data={data} onChange={setData} />
 				<FlatList
 					ListEmptyComponent={
@@ -84,9 +85,9 @@ export default NotesScreen
 const Style = StyleSheet.create({
 	conteiner: {
 		flex: 1,
-		paddingHorizontal: 20,
-		paddingTop: 20,
-		marginTop: 20
+		// paddingHorizontal: 20,
+		// paddingTop: 20,
+		// marginTop: 20
 	},
 	txtInput: {
 		fontSize: 18,
