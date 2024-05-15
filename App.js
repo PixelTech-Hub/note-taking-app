@@ -67,7 +67,7 @@ export default function App() {
           options={{
             title: 'AUDIO RECORDINGS',
             headerTintColor: 'white',
-            headerStyle: { backgroundColor: COLORS.header, elevation: 0 },
+            headerStyle: { backgroundColor: '#e87717', elevation: 0 },
             headerShown: true
           }}
         />
