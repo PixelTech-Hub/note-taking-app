@@ -13,7 +13,7 @@ const renderScene = SceneMap({
 	video: VideoRoute,
 	audio: AudioRoute,
 	photos: PhotoRoute,
-	others: OtherRoute
+	notes: OtherRoute
 });
 
 const MediaTab = () => {
@@ -24,7 +24,7 @@ const MediaTab = () => {
 		{ key: 'video', title: 'Videos' },
 		{ key: 'audio', title: 'Audio' },
 		{ key: 'photos', title: 'Photos' },
-		{ key: 'others', title: 'Others' },
+		{ key: 'notes', title: 'Notes' },
 	]);
 
 	return (
@@ -34,7 +34,7 @@ const MediaTab = () => {
 			onIndexChange={setIndex}
 			initialLayout={{ width: layout.width }}
 			style={{ margin: 0 }}
-			
+
 		/>
 	)
 }

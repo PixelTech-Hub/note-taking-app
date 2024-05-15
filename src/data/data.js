@@ -49,3 +49,27 @@ export const audios = [
 	},
 
 ]
+export const photos = [
+	{
+		id: '1',
+		link: 'http://res.cloudinary.com/dgfsgfzee/image/upload/v1714997229/pbvuxxq9vwq3tbfhn59x.jpg'
+	},
+	{
+		id: '2',
+		link: 'http://res.cloudinary.com/dgfsgfzee/image/upload/v1714997229/pbvuxxq9vwq3tbfhn59x.jpg'
+	},
+	{
+		id: '3',
+		link: 'http://res.cloudinary.com/dgfsgfzee/image/upload/v1714997229/pbvuxxq9vwq3tbfhn59x.jpg'
+	},
+	{
+		id: '4',
+		link: 'http://res.cloudinary.com/dgfsgfzee/image/upload/v1714997229/pbvuxxq9vwq3tbfhn59x.jpg'
+	},
+	{
+		id: '5',
+		link: 'http://res.cloudinary.com/dgfsgfzee/image/upload/v1714997229/pbvuxxq9vwq3tbfhn59x.jpg'
+	},
+	
+
+]

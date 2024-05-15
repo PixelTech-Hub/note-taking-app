@@ -4,7 +4,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MediaTab from '../components/tab/MediaTab';
-import { Ionicons } from '@expo/vector-icons'
 
 
 
@@ -47,27 +46,7 @@ const AppScreen = () => {
 			<MediaTab />
 
 
-			<View className="absolute bottom-32 right-4 space-y-4 ">
-				<TouchableOpacity
-					className="flex bg-black p-2 rounded-full justify-center items-center"
-				// onPress={PickImage}
-				>
-					<Ionicons name="image" size={24} color="white" />
-				</TouchableOpacity>
-				{/* <TouchableOpacity
-					className="flex bg-black p-2 rounded-full justify-center items-center"
-
-				>
-					<Ionicons name="videocam" size={24} color="white" />
-				</TouchableOpacity>
-				<TouchableOpacity
-					className="flex bg-black p-2 rounded-full justify-center items-center"
-
-				>
-					<Ionicons name="audiocam" size={24} color="white" />
-				</TouchableOpacity> */}
-
-			</View>
+			
 
 		</SafeAreaView>
 	)

@@ -3,6 +3,8 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { Image, SafeAreaView, ScrollView, Text, View, useWindowDimensions } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import MediaTab from '../tab/MediaTab'
+import * as ImagePicker from 'expo-image-picker'
+import * as FileSystem from 'expo-file-system'
 
 
 const Stack = createStackNavigator()
@@ -23,6 +25,9 @@ const renderScene = SceneMap({
 
 const DashboardNavigator = () => {
 	const [greeting, setGreeting] = React.useState('');
+	const [image, setImage] = useState(null);
+	const [isLoading, setIsLoading] = useState(false)
+	const [progress, setProgress] = useState(0)
 	// const navigation = useNavigation()
 
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -53,41 +58,127 @@ const DashboardNavigator = () => {
 		setGreeting(greetingText);
 	}, []);
 
-	const getUserID = async () => {
-		try {
-			const userData = await AsyncStorage.getItem('userData');
-			return userData ? JSON.parse(userData).id : null;
-			console.log('.....userdata', userData)
-		} catch (error) {
-			console.error('Error retrieving user ID:', error);
-			return null;
-		}
-	};
 
-	// Function to fetch user data using the user ID
-	const fetchUserData = async () => {
+	// ********** | PHOTO LOGIC | *****************
+
+
+	const PickImage = async () => {
 		try {
-			const userId = await getUserID();
-			if (userId) {
-				// Make a request to your backend API to fetch user data
-				const response = await fetch(`http://localhost:3000/users/${userId}`, {
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						// Optionally, include authentication token if needed
-						// 'Authorization': `Bearer ${accessToken}`
-					}
-				});
-				const userData = await response.json();
-				console.log('User data:', userData);
+			let result = await ImagePicker.launchImageLibraryAsync({
+				mediaTypes: ImagePicker.MediaTypeOptions.Images,
+				allowsEditing: true,
+				aspect: [4, 3],
+				quality: 1
+			});
+			// console.log('ImagePicker result:', result);
+
+			if (!result.cancelled && result.assets.length > 0 && result.assets[0].uri) {
+				const selectedImageUri = result.assets[0].uri;
+				console.log('Selected image URI:', result.assets[0].uri);
+				setImage(result.assets[0].uri);
+				await uploadFile(selectedImageUri);
 			} else {
-				console.error('User ID not found.');
+				console.log('No image selected..');
 			}
 		} catch (error) {
-			console.error('Error fetching user data:', error);
+			console.error('Error picking image:', error);
+		}
+	}
+
+
+	const uploadFile = async () => {
+		console.log('Attempting to upload file...');
+		if (!image) {
+			console.error('No image selected from upload file function');
+			return;
+		}
+		console.log('image selected')
+		console.log('uploading...')
+		setIsLoading(true);
+		try {
+			const { uri } = await FileSystem.getInfoAsync(image);
+			const filename = image.substring(image.lastIndexOf('/') + 1);
+
+			const formData = new FormData();
+
+			formData.append('file', {
+				uri,
+				name: filename,
+				type: 'image/jpeg',
+			});
+			formData.append('upload_preset', 'insight_preset');
+
+			const response = await fetch(API_CLOUDARE_URL, {
+				method: 'POST',
+				body: formData,
+			});
+
+			const data = await response.json();
+			setIsLoading(false);
+			console.log('Cloudinary upload result:', data);
+			saveImageUrl(data.url); // Call function to save URL
+			Alert.alert('Photo Uploaded to Cloudinary');
+			setImage(null);
+		} catch (error) {
+			console.error('Error uploading to Cloudinary:', error);
+			setIsLoading(false);
+			Alert.alert('Error', 'Failed to upload photo');
 		}
 	};
 
+	const saveImageUrl = async (imageUrl) => {
+		try {
+			setIsLoading(true)
+			const response = await fetch(API_SAVE_IMAGE_URL, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ link: imageUrl }),
+			});
+
+			if (!response.ok) {
+				throw new Error('Failed to save image URL: ' + response.status);
+			}
+
+			const data = await response.json();
+			setIsLoading(false)
+			console.log('Image URL saved:', data);
+		} catch (error) {
+			console.error('Error saving image URL:', error.message);
+			setIsLoading(false)
+			Alert.alert('Error', 'Failed to save image URL');
+		}
+	};
+	useEffect(() => {
+		const fetchImageData = async () => {
+			setIsLoading(true);
+			try {
+				const response = await fetch(API_SAVE_IMAGE_URL);
+
+				if (!response.ok) {
+					throw new Error('Failed to fetch data');
+				}
+
+				const data = await response.json();
+				setMultimedia(data);
+				setIsLoading(false);
+			} catch (error) {
+				console.error('Error fetching data:', error.message);
+				setIsLoading(false);
+				// Handle error
+			}
+		};
+
+		fetchImageData(); // Call the function when component mounts
+	}, []);
+
+
+	console.log('data media', multimedia)
+	const data = multimedia.data;
+
+
+	// ********** | VIDEO LOGIC | *****************
 
 
 	// Call fetchUserData wherever you need to retrieve user data
