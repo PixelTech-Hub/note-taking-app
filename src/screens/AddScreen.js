@@ -8,7 +8,71 @@ import { firebase } from '../../firebase'
 
 
 const AddScreen = () => {
-	
+	const uploadFile = async () => {
+		console.log('Attempting to upload file...');
+
+		console.log('image selected')
+		console.log('uploading...')
+		setIsLoading(true);
+		try {
+			const { uri } = await FileSystem.getInfoAsync(image);
+
+
+			if (!uri) {
+				console.error('URI not found');
+				return;
+			}
+			const filename = image.substring(image.lastIndexOf('/') + 1);
+
+			const formData = new FormData();
+
+			formData.append('file', {
+				uri,
+				name: filename,
+				type: 'image/jpeg',
+			});
+			formData.append('upload_preset', 'note_data');
+
+			const response = await fetch(API_CLOUDARE_URL, {
+				method: 'POST',
+				body: formData,
+			});
+
+			const data = await response.json();
+			setIsLoading(false);
+			console.log('Cloudinary upload result:', data);
+			saveImageUrl(data.url); // Call function to save URL
+			Alert.alert('Photo Uploaded to Cloudinary');
+			setImage(null);
+		} catch (error) {
+			console.error('Error uploading to Cloudinary:', error);
+			setIsLoading(false);
+			Alert.alert('Error', 'Network Failed!');
+		}
+	};
+
+
+	const saveImageUrl = async (imageUrl) => {
+		try {
+			setIsLoading(true)
+			postMedia({
+				link: imageUrl,
+				multimedia_type: 'photo'
+			}).then(result => {
+				if (result.status === 200) {
+					console.log('Login Success');
+					Alert.alert("Photo Uploaded Succcessfully!");
+				}
+			}).catch(error => {
+				console.error(error);
+			});
+		}
+		catch (error) {
+			console.error('Error saving image URL:', error.message);
+			setIsLoading(false)
+			Alert.alert('Error', 'Failed to save image URL');
+		}
+	};
 
 
 	console.log('data media', multimedia)
