@@ -4,14 +4,21 @@ import { ScrollView } from 'react-native-gesture-handler';
 // import { withNavigation } from 'react-navigation';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MediaTab from '../components/tab/MediaTab';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 
 
 
-const AppScreen = ({ navigation }) => {
+const AppScreen = () => {
 	const [greeting, setGreeting] = useState("");
 
-	// const navigation = useNavigation()
+	const navigation = useNavigation()
+
+
+	const username = AsyncStorage.getItem("accessToken");
+
+	console.log('username:', username)
 
 	useEffect(() => {
 
@@ -27,16 +34,59 @@ const AppScreen = ({ navigation }) => {
 		setGreeting(greetingText);
 	}, []);
 
+	const handleLogout = async () => {
+		try {
+			const accessToken = await AsyncStorage.removeItem('accessToken');
+			if (accessToken) {
+				// User is already authenticated, navigate to the home screen
+				console.log('logout')
+				navigation.navigate('Login');
+			}
+		} catch (error) {
+			console.error('Error checking login status:', error);
+		}
+	};
 
+
+	const [fullName, setFullName] = useState('');
+
+	useEffect(() => {
+		// Function to fetch access token from AsyncStorage
+		const fetchUserName = async () => {
+			try {
+				const name = await AsyncStorage.getItem('name');
+				if (name !== null) {
+					// Access token found in AsyncStorage
+					setFullName(name);
+				} else {
+					// Access token not found in AsyncStorage
+					console.log('User Name not found');
+				}
+			} catch (error) {
+				// Error retrieving data
+				console.error('Error fetching user name:', error);
+			}
+		};
+
+		// Call the function to fetch access token when the component mounts
+		fetchUserName();
+
+		// Cleanup function (optional)
+		return () => {
+			// Any cleanup code here
+		};
+	}, []); // Empty dependency array ensures the effect runs only once
+
+	console.log(fullName)
 	return (
 		<SafeAreaView className=" bg-slate-300 flex-1 p-2">
 			<View className="flex flex-row items-center justify-between bg-orange-600 p-1 rounded-lg mb-4">
 				<View className="px-2 pt-2 pb-2">
 					<Text className="font-bold text-lg text-white">{greeting}</Text>
-					<Text className="font-bold text-lg text-white">Nathan</Text>
+					<Text className="font-bold text-lg text-white">{fullName}</Text>
 					<Text></Text>
 				</View>
-				<TouchableOpacity onPress={() => navigation.navigate("Settings")}>
+				<TouchableOpacity onPress={handleLogout}>
 					<View className="bg-orange-200 px-4   w-16 h-16 items-center justify-center text-center rounded-full p-1">
 						<Text className="font-bold text-white">Nath</Text>
 					</View>

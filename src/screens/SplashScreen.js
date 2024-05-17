@@ -10,7 +10,7 @@ const SplashScreen = () => {
 	useEffect(() => {
 		setTimeout(() => {
 			// handleGetToken()
-			navigation.navigate("Home")
+			navigation.navigate("Login")
 		}, 2000)
 	})
 	const handleGetToken = async () => {
