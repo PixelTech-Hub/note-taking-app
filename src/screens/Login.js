@@ -47,8 +47,10 @@ const Login = () => {
 			if (response.status === 201) {
 				const accessToken = response?.data?.accessToken;
 				const username = response.data?.data?.name;
+				const userId = response.data?.data?.id;
 				AsyncStorage.setItem("accessToken", accessToken.toString());
 				AsyncStorage.setItem("name", username);
+				AsyncStorage.setItem("userId", userId);
 				console.log('Login Success', response?.data?.data?.name);
 				Alert.alert("Login Success!");
 				navigation.navigate("Home");
