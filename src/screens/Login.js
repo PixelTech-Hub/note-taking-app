@@ -11,6 +11,7 @@ const Login = () => {
 	const [seePassword, setSeePassword] = useState(true)
 	const [checkValidEmail, setCheckValidEmail] = useState(false)
 	const [error, setError] = useState(false)
+	const [loading, setLoading] = useState(false)
 
 	const navigation = useNavigation()
 
@@ -19,11 +20,13 @@ const Login = () => {
 	}, []);
 
 	const checkLoginStatus = async () => {
+
 		try {
 			const accessToken = await AsyncStorage.getItem('accessToken');
 			if (accessToken) {
 				// User is already authenticated, navigate to the home screen
 				navigation.navigate('Home');
+
 			}
 		} catch (error) {
 			console.error('Error checking login status:', error);
@@ -32,8 +35,9 @@ const Login = () => {
 
 	const handleLogin = async () => {
 		console.log('processing user:');
+		setLoading(true)
 		try {
-			const response = await axios.post('http://localhost:3000/users/auth/login', {
+			const response = await axios.post('https://note-taking-app-p5rt.onrender.com/users/auth/login', {
 				email: email,
 				password: password
 			});
@@ -41,71 +45,25 @@ const Login = () => {
 			console.log('login data:')
 
 			if (response.status === 201) {
-				const accessToken = response.data.accessToken;
-				const username = response.data.data.name;
+				const accessToken = response?.data?.accessToken;
+				const username = response.data?.data?.name;
 				AsyncStorage.setItem("accessToken", accessToken.toString());
 				AsyncStorage.setItem("name", username);
-				console.log('Login Success', response.data.data.name);
+				console.log('Login Success', response?.data?.data?.name);
 				Alert.alert("Login Success!");
 				navigation.navigate("Home");
+				setLoading(false)
 			} else {
 				console.error('Login failed:', response.data);
 				// Handle login failure, show error message, etc.
+				setLoading(false)
 			}
 		} catch (error) {
 			console.error('Error during login:', error);
+			setLoading(false)
 			// Handle network errors, etc.
 		}
 	};
-
-	// const handleCheckEmail = (text) => {
-	// 	let re = /\S+0\S+\.\S+/;
-	// 	let regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im
-	// 	setEmail(text)
-	// 	if (re.test(text) || regex.test(text)) {
-	// 		setCheckValidEmail(false)
-	// 	}
-	// 	else {
-	// 		setCheckValidEmail(true)
-	// 	}
-	// }
-
-	// const checkPasswordValidity = (value) => {
-	// 	const isNonWhiteSpace = /^\S*$/;
-	// 	const isContainUppercase = /^(?=.*[A-Z]).*$/;
-	// 	const isContainLowercase = /^(?=.*[a-z]).*$/;
-	// 	const isValidLength = /^.{8,16}$/;
-	// 	if (!isNonWhiteSpace.test(value)) {
-	// 		return 'Password must not contain empty space'
-	// 	}
-	// 	if (!isContainUppercase.test(value)) {
-	// 		return 'Password must have atleast one uppercase'
-	// 	}
-	// 	if (!isContainLowercase.test(value)) {
-	// 		return 'Password must have atleast one lowercase'
-	// 	}
-	// 	if (!isValidLength.test(value)) {
-	// 		return 'Password must have atleast 8 characters'
-	// 	}
-	// 	return null;
-	// }
-
-	// const handleLogin = () => {
-	// 	userLogin({
-	// 		email: email,
-	// 		password: password
-	// 	}).then(result => {
-	// 		if (result.status === 201) {
-	// 			const accessToken = result.data.accessToken; // Assuming accessToken is the key for the access token in the response
-	// 			AsyncStorage.setItem("accessToken", accessToken.toString()); // Convert to string before setting
-	// 			console.log('Login Success');
-	// 			Alert.alert("Login Success!");
-	// 			navigation.navigate("Home");
-	// 		}
-	// 	}).catch(error => {
-	// 		console.error(error);
-	// 	});
-	// };
 
 	return (
 		<View className="flex-1 bg-white h-screen">
@@ -146,7 +104,7 @@ const Login = () => {
 							className="text-xl font-bold text-center text-white"
 
 						>
-							Login
+							{loading ? 'Processing...' : 'Login'}
 						</Text>
 					</TouchableOpacity>
 

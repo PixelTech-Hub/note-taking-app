@@ -6,12 +6,14 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import MediaTab from '../components/tab/MediaTab';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 
 
 
 const AppScreen = () => {
 	const [greeting, setGreeting] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	const navigation = useNavigation()
 
@@ -36,14 +38,10 @@ const AppScreen = () => {
 
 	const handleLogout = async () => {
 		try {
-			const accessToken = await AsyncStorage.removeItem('accessToken');
-			if (accessToken) {
-				// User is already authenticated, navigate to the home screen
-				console.log('logout')
-				navigation.navigate('Login');
-			}
+			await AsyncStorage.removeItem('accessToken');
+			navigation.navigate('Login');
 		} catch (error) {
-			console.error('Error checking login status:', error);
+			console.error('Error logging out:', error);
 		}
 	};
 
@@ -87,8 +85,8 @@ const AppScreen = () => {
 					<Text></Text>
 				</View>
 				<TouchableOpacity onPress={handleLogout}>
-					<View className="bg-orange-200 px-4   w-16 h-16 items-center justify-center text-center rounded-full p-1">
-						<Text className="font-bold text-white">Nath</Text>
+					<View className="bg-white px-4   w-16 h-16 items-center justify-center text-center rounded-full p-1">
+						<Ionicons name="log-out-outline" size={30} color="black" />
 					</View>
 				</TouchableOpacity>
 
