@@ -5,24 +5,56 @@ import {
 	TextInput,
 	TouchableOpacity,
 	StyleSheet,
+	ActivityIndicator,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import ModalNotification from "../components/notifications/Notification";
 import COLORS from "../components/colors/colors";
 import SaveNote from "../components/notes/saveNote";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 const AddNotesScreen = ({ route, navigation }) => {
 	const [date, setDate] = useState(new Date());
-	const [note, setNote] = useState({
-		title: "",
-		note: "",
-		date: date,
-		notificationId: null,
-	});
+	const [title, setTitle] = useState("")
+	const [description, setDescription] = useState("")
 	const [modalVisible, setModalVisible] = useState(false);
+	const [userId, setUserId] = useState('');
+	const [loading, setLoading] = useState(false);
 
 
+
+
+	useEffect(() => {
+		// Function to fetch access token from AsyncStorage
+		const fetchUserId = async () => {
+			try {
+				const id = await AsyncStorage.getItem('userId');
+				if (id !== null) {
+					// Access token found in AsyncStorage
+					setUserId(id);
+				} else {
+					// Access token not found in AsyncStorage
+					console.log('User Id not found');
+				}
+			} catch (error) {
+				// Error retrieving data
+				console.error('Error fetching user id:', error);
+			}
+		};
+
+		// Call the function to fetch access token when the component mounts
+		fetchUserId();
+
+		// Cleanup function (optional)
+		return () => {
+			// Any cleanup code here
+		};
+	}, []); // Empty dependency array ensures the effect runs only once
+
+
+	console.log('userId: ', userId)
 
 	useEffect(() => {
 		if (route.params.note) {
@@ -55,32 +87,64 @@ const AddNotesScreen = ({ route, navigation }) => {
 				);
 			},
 		});
-	}, [navigation, note]);
+	}, [navigation, title, description]);
+
+	const handlePostNewNote = async () => {
+		console.log('processing new note:');
+
+		try {
+			setLoading(true)
+			const response = await axios.post('https://note-taking-app-p5rt.onrender.com/notes', {
+				userId: userId,
+				title: title,
+				description: description
+			});
+
+			console.log('notes data:', response.data)
+
+			// if (response.status === 200) {
+
+			// Alert.alert("Account Activated!😊");
+			navigation.navigate("Notes");
+			setLoading(false)
+			// } else {
+			// 	console.error('SignUp failed:', response?.data);
+			// 	// Handle login failure, show error message, etc.
+			// 	setLoading(false)
+			// }
+		} catch (error) {
+			console.error('Error during signup:', error);
+			setLoading(false)
+			// Handle network errors, etc.
+		}
+	};
+
+
 	return (
-		<SafeAreaView  className="bg-slate-300 flex-1 h-screen p-4">
+		<SafeAreaView className="bg-slate-300 flex-1 h-screen p-4">
 			<TextInput
 				style={Style.txtTitleNote}
 				autoFocus={true}
 				maxLength={40}
-				value={note.title}
+				value={title}
 				placeholder={"Title"}
-				onChangeText={(text) => setNote({ ...note, title: text })}
+				onChangeText={(text) => setTitle(text)}
 			></TextInput>
 			<TextInput
 				style={Style.txtInput}
 				multiline={true}
-				value={note.note}
+				value={description}
 				placeholder={"Description"}
-				onChangeText={(text) => setNote({ ...note, note: text })}
+				onChangeText={(text) => setDescription(text)}
 			></TextInput>
-			<ModalNotification
+			{/* <ModalNotification
 				modalVisible={modalVisible}
 				setModalVisible={setModalVisible}
 				date={date}
 				setDate={setDate}
 				note={note}
 				setNote={setNote}
-			/>
+			/> */}
 			<View className="absolute bottom-10 left-0 right-0 flex flex-row px-24 gap-10">
 				<TouchableOpacity
 					style={[
@@ -90,9 +154,11 @@ const AddNotesScreen = ({ route, navigation }) => {
 							flex: 1,
 						},
 					]}
-					onPress={() => SaveNote(note, navigation)}
+					onPress={handlePostNewNote}
 				>
-					<Feather name="save" size={20} color="white" />
+					{loading ? <ActivityIndicator /> : (
+						<Feather name="save" size={20} color="white" />
+					)}
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={[

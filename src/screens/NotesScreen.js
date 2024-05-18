@@ -15,7 +15,6 @@ import SearchBar from '../components/search/SearchBar';
 import Colors from '../components/colors/colors';
 import Notes from '../components/notes/RenderNotes';
 import { SafeAreaView } from "react-native-safe-area-context";
-import COLORS from "../components/colors/colors";
 
 const NotesScreen = () => {
 	const [data, setData] = useState(null);

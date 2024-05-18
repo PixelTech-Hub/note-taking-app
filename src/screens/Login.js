@@ -84,7 +84,7 @@ const Login = () => {
 				<View className="form space-y-2">
 					<Text className="text-gray-700 ml-4" >Email Address</Text>
 					<TextInput
-						className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
+						className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3 lowercase"
 						textContentType='emailAddress'
 						value={email}
 						onChangeText={(text) => setEmail(text)}
