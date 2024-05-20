@@ -56,11 +56,7 @@ const AddNotesScreen = ({ route, navigation }) => {
 
 	console.log('userId: ', userId)
 
-	useEffect(() => {
-		if (route.params.note) {
-			setNote(route.params.note);
-		}
-	}, []);
+
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -119,6 +115,23 @@ const AddNotesScreen = ({ route, navigation }) => {
 		}
 	};
 
+
+	const handleDeletePost = async() => {
+		console.log('deeleting a note...')
+		try{
+			setLoading(true)
+			const response = await fetch(`https://note-taking-app-p5rt.onrender.com/notes/${id}`, {
+				method: 'DELETE'
+			})
+			
+		}
+	}
+
+	// useEffect(() => {
+	// 	if (route.params.note) {
+	// 		setNote(route.params.note);
+	// 	}
+	// }, []);
 
 	return (
 		<SafeAreaView className="bg-slate-300 flex-1 h-screen p-4">

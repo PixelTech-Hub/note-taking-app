@@ -18,7 +18,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
 
 const NotesScreen = () => {
-	const [data, setData] = useState(null);
+	const [data, setData] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [userId, setUserId] = useState('');
 
@@ -47,41 +47,49 @@ const NotesScreen = () => {
 		return () => {
 			// Any cleanup code here
 		};
-	}, []); // Empty dependency array ensures the effect runs only once
+	}, [data]); // Empty dependency array ensures the effect runs only once
 
 
 
-	useEffect(async () => {
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				setLoading(true)
+				console.log('processing data...')
+				// Make API call using Axios
+				const response = await axios.get(`https://note-taking-app-p5rt.onrender.com/notes/user/${userId}`);
+				// Assuming your API returns JSON data
+				setData(response?.data);
+				setLoading(false);
+			} catch (error) {
+				console.log('error fetching:', error)
+				setLoading(false);
+			}
+		};
 
-		try {
-			const response = await axios.get(`https://note-taking-app-p5rt.onrender.com/notes/user/${userId}`)
-			setData(response.data)
-			console.log('++++data+++', response.data)
-		} catch (error) {
-			// Error retrieving data
-			console.error('Error fetching user notes:', error);
-		}
-	}, [])
+		fetchData(); // Call the fetchData function
+	}, [data]);
 
-
-	console.log('fetching data....', data);
+	console.log('fetching data....=', data?.data);
 
 	return (
 		<SafeAreaView
 			className="bg-[#00283A] flex-1 h-screen px-2"
 		>
 			<Text className="text-white font-bold py-6 text-2xl text-center">MY NOTES</Text>
-			<SearchBar data={data} onChange={setData} />
+			<SearchBar data={data?.data} onChange={setData} />
+
 			<FlatList
 				ListEmptyComponent={
-					<Text className="text-center">No Data!</Text>
+					<Text className="text-center text-white py-4 text-xl">No Data!</Text>
 				}
-				data={data}
+				data={data?.data}
 				keyExtractor={(item) => item.id.toString()}
 				renderItem={({ item }) => {
 					return <Notes item={item} navigation={navigation} />;
 				}}
 			/>
+
 			<TouchableOpacity
 				// className="absolute -bottom-[550px] right-10"
 				style={Style.newNoteButton}

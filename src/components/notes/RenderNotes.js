@@ -4,6 +4,7 @@ import { Feather } from "@expo/vector-icons";
 import Style from "../style/style";
 
 export default function renderNote({ item, navigation }) {
+	console.log('each notes')
 	return (
 		<TouchableOpacity
 			style={Style.noteArea}
@@ -18,7 +19,7 @@ export default function renderNote({ item, navigation }) {
 				)}
 			</View>
 			<Text style={Style.txtNote} numberOfLines={6}>
-				{item.note}
+				{item.description}
 			</Text>
 		</TouchableOpacity>
 	);
