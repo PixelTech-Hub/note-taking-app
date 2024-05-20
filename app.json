@@ -4,7 +4,7 @@
     "slug": "app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/logo.png",
@@ -20,7 +20,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.danielklassic.app"
@@ -33,9 +33,6 @@
         "projectId": "aa39c6ca-d5ff-48e6-a04c-1865e9521bc4"
       }
     },
-    "permissions": [
-      "CAMERA_ROLL"
-    ],
     "plugins": [
       [
         "expo-image-picker",
