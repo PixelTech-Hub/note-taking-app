@@ -7,11 +7,15 @@
       "developmentClient": true,
       "distribution": "internal"
     },
-    "preview": {
+    "previewOne": {
       "distribution": "internal",
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "image": "default"
       }
+    },
+    "preview": {
+      "distribution": "internal"
     },
     "production": {}
   },
