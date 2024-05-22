@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
 	FlatList,
 	TouchableOpacity,
@@ -15,91 +15,70 @@ import SearchBar from '../components/search/SearchBar';
 import Colors from '../components/colors/colors';
 import Notes from '../components/notes/RenderNotes';
 import { SafeAreaView } from "react-native-safe-area-context";
-import axios from "axios";
 
 const NotesScreen = () => {
-	const [data, setData] = useState([]);
+	const [data, setData] = useState(null);
 	const [loading, setLoading] = useState(true);
-	const [userId, setUserId] = useState('');
 
 	const navigation = useNavigation()
+	
 
-	useEffect(() => {
-		const fetchUserId = async () => {
-			try {
-				const id = await AsyncStorage.getItem('userId');
-				if (id !== null) {
-					// Access token found in AsyncStorage
-					setUserId(id);
-				} else {
-					// Access token not found in AsyncStorage
-					console.log('User Id not found');
+	useFocusEffect(
+		React.useCallback(() => {
+			setLoading(true);
+			const getData = async () => {
+				try {
+					let notes = await AsyncStorage.getItem("notes");
+					if (notes === undefined || notes === null) {
+						notes = "[]";
+					}
+					if (notes.length > 0 && notes[0] !== "[") {
+						notes = `[${notes}]`;
+					}
+					setData(JSON.parse(notes));
+					setLoading(false);
+				} catch (err) {
+					console.log(err);
+					alert("Error loading notes");
 				}
-			} catch (error) {
-				// Error retrieving data
-				console.error('Error fetching user id:', error);
-			}
-		};
-		// Call the function to fetch access token when the component mounts
-		fetchUserId();
-
-		// Cleanup function (optional)
-		return () => {
-			// Any cleanup code here
-		};
-	}, [data]); // Empty dependency array ensures the effect runs only once
-
-
-
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				setLoading(true)
-				console.log('processing data...')
-				// Make API call using Axios
-				const response = await axios.get(`https://note-taking-app-p5rt.onrender.com/notes/user/${userId}`);
-				// Assuming your API returns JSON data
-				setData(response?.data);
-				setLoading(false);
-			} catch (error) {
-				console.log('error fetching:', error)
-				setLoading(false);
-			}
-		};
-
-		fetchData(); // Call the fetchData function
-	}, [data]);
-
-	console.log('fetching data....=', data?.data);
-
-	return (
-		<SafeAreaView
-			className="bg-[#00283A] flex-1 h-screen px-2"
-		>
-			<Text className="text-white font-bold py-6 text-2xl text-center">MY NOTES</Text>
-			<SearchBar data={data?.data} onChange={setData} />
-
-			<FlatList
-				ListEmptyComponent={
-					<Text className="text-center text-white py-4 text-xl">No Data!</Text>
-				}
-				data={data?.data}
-				keyExtractor={(item) => item.id.toString()}
-				renderItem={({ item }) => {
-					return <Notes item={item} navigation={navigation} />;
-				}}
-			/>
-
-			<TouchableOpacity
-				// className="absolute -bottom-[550px] right-10"
-				style={Style.newNoteButton}
-				onPress={() => navigation.navigate("Add Notes", { search: false })}
-
+			};
+			getData();
+		}, [])
+	);
+	if (loading) {
+		return (
+			<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+				<ActivityIndicator size={"large"} color={Colors.loading} />
+			</View>
+		);
+	} else {
+		return (
+			<SafeAreaView
+				className="bg-[#00283A] flex-1 h-screen px-2"
 			>
-				<AntDesign name="pluscircle" size={50} color={Colors.addButton} />
-			</TouchableOpacity>
-		</SafeAreaView>
-	)
+				<Text className="text-white font-bold py-6 text-2xl text-center">MY NOTES</Text>
+				<SearchBar data={data} onChange={setData} />
+				<FlatList
+					ListEmptyComponent={
+						<Text className="text-center">No Data!</Text>
+					}
+					data={data}
+					keyExtractor={(item) => item.id.toString()}
+					renderItem={({ item }) => {
+						return <Notes item={item} navigation={navigation} />;
+					}}
+				/>
+				<TouchableOpacity
+					// className="absolute -bottom-[550px] right-10"
+					style={Style.newNoteButton}
+					onPress={() => navigation.navigate("Add Notes", { search: false })}
+					
+				>
+					<AntDesign name="pluscircle" size={50} color={Colors.addButton} />
+				</TouchableOpacity>
+			</SafeAreaView>
+		)
+	}
 }
 
 export default NotesScreen

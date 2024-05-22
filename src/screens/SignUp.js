@@ -47,7 +47,7 @@ const SignUp = () => {
 			<SafeAreaView className="flex ">
 				<View className="flex-row justify-center">
 					<Image source={require("../../assets/images/signup.png")}
-						style={{ width: 400, height: 300 }} />
+						style={{ width: 200, height: 200 }} />
 				</View>
 
 

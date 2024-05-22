@@ -5,58 +5,32 @@ import {
 	TextInput,
 	TouchableOpacity,
 	StyleSheet,
-	ActivityIndicator,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import ModalNotification from "../components/notifications/Notification";
 import COLORS from "../components/colors/colors";
 import SaveNote from "../components/notes/saveNote";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import ModalShareCard from "../components/ModalShareCard";
 
 const AddNotesScreen = ({ route, navigation }) => {
 	const [date, setDate] = useState(new Date());
-	const [title, setTitle] = useState("")
-	const [description, setDescription] = useState("")
+	const [note, setNote] = useState({
+		title: "",
+		note: "",
+		date: date,
+		notificationId: null,
+	});
 	const [modalVisible, setModalVisible] = useState(false);
-	const [userId, setUserId] = useState('');
-	const [loading, setLoading] = useState(false);
-
+	const [openShare, setOpenShare] = useState(false);
 
 
 
 	useEffect(() => {
-		// Function to fetch access token from AsyncStorage
-		const fetchUserId = async () => {
-			try {
-				const id = await AsyncStorage.getItem('userId');
-				if (id !== null) {
-					// Access token found in AsyncStorage
-					setUserId(id);
-				} else {
-					// Access token not found in AsyncStorage
-					console.log('User Id not found');
-				}
-			} catch (error) {
-				// Error retrieving data
-				console.error('Error fetching user id:', error);
-			}
-		};
-
-		// Call the function to fetch access token when the component mounts
-		fetchUserId();
-
-		// Cleanup function (optional)
-		return () => {
-			// Any cleanup code here
-		};
-	}, []); // Empty dependency array ensures the effect runs only once
-
-
-	console.log('userId: ', userId)
-
-
+		if (route.params.note) {
+			setNote(route.params.note);
+		}
+	}, []);
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -76,88 +50,45 @@ const AddNotesScreen = ({ route, navigation }) => {
 						<TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
 							<Feather name="bell" size={24} color="white" />
 						</TouchableOpacity>
-						{/* <TouchableOpacity onPress={() => Delete(note, navigation)}>
-                <Feather name="trash-2" size={24} color="black" />
-              </TouchableOpacity> */}
+						<TouchableOpacity onPress={() => setOpenShare(!openShare)}>
+							<Feather name="share-2" size={24} color="white" />
+						</TouchableOpacity>
 					</View>
 				);
 			},
 		});
-	}, [navigation, title, description]);
-
-	const handlePostNewNote = async () => {
-		console.log('processing new note:');
-
-		try {
-			setLoading(true)
-			const response = await axios.post('https://note-taking-app-p5rt.onrender.com/notes', {
-				userId: userId,
-				title: title,
-				description: description
-			});
-
-			console.log('notes data:', response.data)
-
-			// if (response.status === 200) {
-
-			// Alert.alert("Account Activated!😊");
-			navigation.navigate("Notes");
-			setLoading(false)
-			// } else {
-			// 	console.error('SignUp failed:', response?.data);
-			// 	// Handle login failure, show error message, etc.
-			// 	setLoading(false)
-			// }
-		} catch (error) {
-			console.error('Error during signup:', error);
-			setLoading(false)
-			// Handle network errors, etc.
-		}
-	};
-
-
-	const handleDeletePost = async() => {
-		console.log('deeleting a note...')
-		try{
-			setLoading(true)
-			const response = await fetch(`https://note-taking-app-p5rt.onrender.com/notes/${id}`, {
-				method: 'DELETE'
-			})
-			
-		}
-	}
-
-	// useEffect(() => {
-	// 	if (route.params.note) {
-	// 		setNote(route.params.note);
-	// 	}
-	// }, []);
-
+	}, [navigation, note]);
 	return (
 		<SafeAreaView className="bg-slate-300 flex-1 h-screen p-4">
 			<TextInput
 				style={Style.txtTitleNote}
 				autoFocus={true}
 				maxLength={40}
-				value={title}
+				value={note.title}
 				placeholder={"Title"}
-				onChangeText={(text) => setTitle(text)}
+				onChangeText={(text) => setNote({ ...note, title: text })}
 			></TextInput>
 			<TextInput
 				style={Style.txtInput}
 				multiline={true}
-				value={description}
+				value={note.note}
 				placeholder={"Description"}
-				onChangeText={(text) => setDescription(text)}
+				onChangeText={(text) => setNote({ ...note, note: text })}
 			></TextInput>
-			{/* <ModalNotification
+			<ModalNotification
 				modalVisible={modalVisible}
 				setModalVisible={setModalVisible}
 				date={date}
 				setDate={setDate}
 				note={note}
 				setNote={setNote}
-			/> */}
+			/>
+			<ModalShareCard
+				openShare={openShare}
+				setOpenShare={setOpenShare}
+				note={note}
+				setNote={setNote} 
+			/>
 			<View className="absolute bottom-10 left-0 right-0 flex flex-row px-24 gap-10">
 				<TouchableOpacity
 					style={[
@@ -167,11 +98,9 @@ const AddNotesScreen = ({ route, navigation }) => {
 							flex: 1,
 						},
 					]}
-					onPress={handlePostNewNote}
+					onPress={() => SaveNote(note, navigation)}
 				>
-					{loading ? <ActivityIndicator /> : (
-						<Feather name="save" size={20} color="white" />
-					)}
+					<Feather name="save" size={20} color="white" />
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={[

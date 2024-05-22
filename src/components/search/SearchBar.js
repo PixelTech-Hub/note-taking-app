@@ -18,6 +18,7 @@ export default function SearchBar({ data, onChange }) {
 		}
 	};
 
+	console.log(data)
 	return (
 		<View className="bg-[#e87717] rounded-lg p-3 px-2" >
 			<TextInput
@@ -26,7 +27,7 @@ export default function SearchBar({ data, onChange }) {
 				onChangeText={(text) => search(text)}
 				placeholderTextColor="#fff"
 				className="text-lg"
-				
+
 			/>
 		</View>
 	);

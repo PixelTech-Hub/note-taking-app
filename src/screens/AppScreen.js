@@ -103,7 +103,7 @@ const AppScreen = () => {
 				>
 					<TouchableOpacity
 						onPress={() => navigation.navigate("Videos")}
-						className=" rounded-xl p-2 h-[150px] flex flex-row px-4"
+						className=" rounded-xl p-2 h-[150px] w-[200px] flex flex-row px-4"
 					// style={Style.card}
 					>
 						<View>
@@ -122,7 +122,7 @@ const AppScreen = () => {
 				>
 					<TouchableOpacity
 						onPress={() => navigation.navigate("Photos")}
-						className=" rounded-xl p-2 h-[150px] flex flex-row px-4"
+						className=" rounded-xl p-2 h-[150px] w-[300px] flex flex-row px-4"
 					>
 						<View>
 							<Ionicons name="images" size={120} color="white" />
@@ -140,7 +140,7 @@ const AppScreen = () => {
 				>
 					<TouchableOpacity
 						onPress={() => navigation.navigate("Audios")}
-						className=" rounded-xl p-2 h-[150px] flex flex-row px-4"
+						className=" rounded-xl p-2 h-[150px] w-[350px] flex flex-row px-4"
 					>
 						<View>
 							<Ionicons name="musical-notes-outline" size={120} color="white" />
@@ -158,7 +158,7 @@ const AppScreen = () => {
 				>
 					<TouchableOpacity
 						onPress={() => navigation.navigate("Notes")}
-						className=" rounded-xl p-2 h-[150px] flex flex-row px-4"
+						className=" rounded-xl p-2 h-[150px] w-[250px] flex flex-row px-4"
 					>
 						<View>
 							<Ionicons name="reader-outline" size={120} color="white" />
